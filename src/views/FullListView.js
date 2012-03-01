@@ -8,7 +8,8 @@ define(['Backbone','Underscore',"jQuery" ,"TodoView"], function(Backbone,_,$, To
 
         //Events
         events: {
-            "keypress #newTodo": "createOnEnter"
+            "keypress #newTodo": "createOnEnter",
+            "keyup #newTodo": "updateCounter"
         },
 
         initialize: function (opt) {
@@ -74,14 +75,39 @@ define(['Backbone','Underscore',"jQuery" ,"TodoView"], function(Backbone,_,$, To
         createOnEnter: function (e) {
             var todo = $('#newTodo').val();
             if (!todo || e.keyCode != 13) return;
-
+            if(todo.length > 100) return;
+            todo = this.validate(todo);
             this.collection.create({
                 todo: todo,
                 listModelId: list.id,
                 order: this.nextOrder()
             });
             this.$('#newTodo').val('');
+            $('#todoCounter').html('100');
         },
+        validate: function(string) {            if(string){
+               var mydiv = document.createElement("div");
+               mydiv.innerHTML = string;
+ 
+                if (document.all) // IE Stuff
+                {
+                    return mydiv.innerText;
+               
+                }   
+                else // Mozilla does not work with innerText
+                {
+                    return mydiv.textContent;
+                }                           
+          }        },
+        updateCounter: function(e) {
+
+            //if not a enter push, then change counter
+            if(e.keyCode != 13){
+                var title = $('#newTodo').val();
+                var left = 100 - title.length;
+                $('#todoCounter').html(left);
+            }
+        }
     });
 
 	return FullListView;

@@ -11,6 +11,7 @@ define(['Backbone','Underscore',"jQuery"], function(Backbone,_, $){
             "click .todoItem span:nth-child(1)": "clear",
             "keypress .editTodoItem input": "updateOnEnter",
             "blur .editTodoItem input": "close",
+            "keyup .editTodoItem input": "updateCounter",
         },
 
         //Listen if a model change or is deleted.
@@ -63,13 +64,41 @@ define(['Backbone','Underscore',"jQuery"], function(Backbone,_, $){
         updateOnEnter: function (e) {
             if (e.keyCode == 13) {
                 if (this.$('input').val() != '') {
+                    var string = this.validate(this.$('input').val());
+                    if(string.length > 100) return;
                     this.model.save({
-                        todo: this.$('input').val()
+                        todo: string
                     });
                 }
                 this.close();
             }
         },
+        validate: function(string) {
+            if(string){
+               var mydiv = document.createElement("div");
+               mydiv.innerHTML = string;
+ 
+                if (document.all) // IE Stuff
+                {
+                    return mydiv.innerText;
+               
+                }   
+                else // Mozilla does not work with innerText
+                {
+                    return mydiv.textContent;
+                }                           
+          }
+        },
+        updateCounter: function(e) {
+
+            //if not a enter push, then change counter
+            if(e.keyCode != 13){
+                var title = this.$('input').val();
+                var left = 100 - title.length;
+                $(this.$('.editTodoCounter')).html(left);
+            }
+        }
+
     });
 
 	return TodoView;
