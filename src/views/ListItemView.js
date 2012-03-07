@@ -8,6 +8,7 @@ ListItemView = Backbone.View.extend({
         events: {
             "dblclick .listItem span:nth-child(2)": "edit",
             "click .listItem span:nth-child(1)": "clear",
+			"click .listItem span:nth-child(2)": "selectedItem",
             "keypress .editListItem input": "updateOnEnter",
             "blur .editListItem input": "close",
             "keyup .editListItem input": "updateCounter"
@@ -50,6 +51,12 @@ ListItemView = Backbone.View.extend({
             this.model.destroy();
         },
 
+		selectedItem: function()
+		{
+			$('.listItem').css('font-weight', 'normal');
+			this.$('.listItem').css('font-weight', 'bold');
+		},
+
         //Check if the user clicked Enter and then save if
         //a value exists in the input field. Remove the added classes 
         //to show and hide the correct fields.
@@ -57,7 +64,7 @@ ListItemView = Backbone.View.extend({
             if (e.keyCode == 13) {
                 if (this.$('input').val() != '') {
                     var string = this.validate(this.$('input').val());
-                    if(string.length > 100) return;
+                    if(string.length > 30) return;
                     //rensar undan eventuella HTML-taggar
                     string = this.validate(string);
                     this.model.save({
@@ -88,7 +95,7 @@ ListItemView = Backbone.View.extend({
             //if not a enter push, then change counter
             if(e.keyCode != 13){
                 var title = this.$('.editListItem input').val();
-                var left = 100 - title.length;
+                var left = 30 - title.length;
                 $(this.$('.editListCounter')).html(left);
             }
         }

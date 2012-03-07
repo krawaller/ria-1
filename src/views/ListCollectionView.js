@@ -9,7 +9,9 @@ define(['Backbone','Underscore',"jQuery","ListItemView"], function(Backbone,_,$,
         //Events
         events: {
             "keypress #newList": "createOnEnter",
+			"click #newListButton": "createWithButton",
             "keyup #newList": "updateCounter",
+			"click .listItem span:nth-child(1)": "removeList",
             "click .listItem span:nth-child(2)": "showList" // flyttad till ListCollectionView
         },
 
@@ -20,7 +22,7 @@ define(['Backbone','Underscore',"jQuery","ListItemView"], function(Backbone,_,$,
         },
 
         initialize: function (opt) {
-            _.bindAll(this, "render", "createOnEnter", 'addOne', 'addAll');
+            _.bindAll(this, "render", "createOnEnter", 'createWithButton', 'createItem', 'addOne', 'addAll');
             this.collection.bind('add', this.addOne, this);
             this.collection.bind('reset', this.addAll, this);
             this.collection.bind('change', this.render, this);
@@ -69,19 +71,37 @@ define(['Backbone','Underscore',"jQuery","ListItemView"], function(Backbone,_,$,
             return this.collection.length + 1;
         },
 
-        //Create a new item in list
+        //Create a new item by hitting the enter key
         createOnEnter: function (e) {
             var title = $('#newList').val();
-            if (!title || e.keyCode != 13) return;
-            if(title.length > 100)return;
+            if (!title || e.keyCode != 13){
+				return;
+			} 
+			this.createItem();
+        },
+
+		// Create an item by clicking the button
+		createWithButton: function() {
+			var title = $('#newList').val();
+            if (!title){
+				return;
+			} 
+			this.createItem();
+		},
+
+		// Create a new item in list
+		createItem: function() {
+			var title = $('#newList').val()
+            if(title.length > 30)return;
             title = this.validate(title);
             this.collection.create({
                 title: title,
                 order: this.nextOrder()
             });
             this.$('#newList').val('');
-            $('#listCounter').html('100');
-        },
+            $('#listCounter').html('30');
+		},
+
         validate: function(string) {            if(string){
                var mydiv = document.createElement("div");
                mydiv.innerHTML = string;
@@ -101,10 +121,14 @@ define(['Backbone','Underscore',"jQuery","ListItemView"], function(Backbone,_,$,
             //if not a enter push, then change counter
             if(e.keyCode != 13){
                 var title = $('#newList').val();
-                var left = 100 - title.length;
+                var left = 30 - title.length;
                 $('#listCounter').html(left);
             }
-        }
+        },
+
+		removeList: function() {
+            this.trigger("removeAllTodosInList");
+		}
     });
 
 	return ListCollectionView;

@@ -9,12 +9,13 @@ define(['Backbone','Underscore',"jQuery" ,"TodoView"], function(Backbone,_,$, To
         //Events
         events: {
             "keypress #newTodo": "createOnEnter",
+			"click #todoButton": "createWithButton",
             "keyup #newTodo": "updateCounter"
         },
 
         initialize: function (opt) {
 
-            _.bindAll(this, "render", "createOnEnter", 'addOne', 'addAll');
+			_.bindAll(this, "render", "createOnEnter", 'createWithButton', 'createItem', 'addOne', 'addAll');
             this.collection.bind('add', this.addOne, this);
             this.collection.bind('reset', this.addAll, this);
             this.collection.bind('change', this.render, this);
@@ -72,10 +73,28 @@ define(['Backbone','Underscore',"jQuery" ,"TodoView"], function(Backbone,_,$, To
             return this.collection.length + 1;
         },
 
+        //Create a new item by hitting the enter key
         createOnEnter: function (e) {
             var todo = $('#newTodo').val();
-            if (!todo || e.keyCode != 13) return;
-            if(todo.length > 100) return;
+            if (!todo || e.keyCode != 13){
+				return;
+			} 
+			this.createItem();
+        },
+
+		// Create an item by clicking the button
+		createWithButton: function() {
+			var todo = $('#newTodo').val();
+            if (!todo){
+				return;
+			} 
+			this.createItem();
+		},
+
+		// Create a new item in list
+		createItem: function() {
+			var todo = $('#newTodo').val();
+            if(todo.length > 30) return;
             todo = this.validate(todo);
             this.collection.create({
                 todo: todo,
@@ -83,8 +102,9 @@ define(['Backbone','Underscore',"jQuery" ,"TodoView"], function(Backbone,_,$, To
                 order: this.nextOrder()
             });
             this.$('#newTodo').val('');
-            $('#todoCounter').html('100');
-        },
+            $('#todoCounter').html('30');
+		},
+
         validate: function(string) {            if(string){
                var mydiv = document.createElement("div");
                mydiv.innerHTML = string;
@@ -104,7 +124,7 @@ define(['Backbone','Underscore',"jQuery" ,"TodoView"], function(Backbone,_,$, To
             //if not a enter push, then change counter
             if(e.keyCode != 13){
                 var title = $('#newTodo').val();
-                var left = 100 - title.length;
+                var left = 30 - title.length;
                 $('#todoCounter').html(left);
             }
         }

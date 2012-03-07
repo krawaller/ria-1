@@ -97,3 +97,9 @@ hr {
 .checked{
 	text-decoration:line-through;
 }
+.selectedItem{
+	font-weight: bold;
+}
+.unSelectItems{
+	font-weight: normal;
+}
