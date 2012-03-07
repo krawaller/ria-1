@@ -11,7 +11,7 @@ define(['Backbone','Underscore',"jQuery"], function(Backbone,_, $){
             "click .todoItem span:nth-child(1)": "clear",
             "keypress .editTodoItem input": "updateOnEnter",
             "blur .editTodoItem input": "close",
-            "keyup .editTodoItem input": "updateCounter",
+            "keyup .editTodoItem input": "updateCounter"
         },
 
         //Listen if a model change or is deleted.
@@ -33,6 +33,7 @@ define(['Backbone','Underscore',"jQuery"], function(Backbone,_, $){
             this.$('.todoItem').addClass('hide');
             this.$('.editTodoItem').addClass('editing');
             this.$('input').focus();
+            this.$('input').val(this.model.get('todo'));
         },
 
         //Remove element from scene.
@@ -45,6 +46,7 @@ define(['Backbone','Underscore',"jQuery"], function(Backbone,_, $){
         close: function () {
             $('.todoItem').removeClass('hide');
             $('.editTodoItem').removeClass('editing');
+            this.saveEdit();
         },
 
         //Destroy this model
@@ -58,21 +60,22 @@ define(['Backbone','Underscore',"jQuery"], function(Backbone,_, $){
             return this.collection.lenght + 1;
         },
 
+        saveEdit: function () {
+            //rensar undan eventuella HTML-taggar
+            var string = this.validate(this.$('input').val());
+            this.model.save({
+                todo: string
+            });
+        },
+
         //Check if the user clicked enter and then save if
-        //a value exists in the input. Remove the added classes 
+        //a value exists in the input. Remove the added classes
         //to show and hide the correct fields.
         updateOnEnter: function (e) {
-            if (e.keyCode == 13) {
-                if (this.$('input').val() != '') {
-                    var string = this.validate(this.$('input').val());
-                    if(string.length > 100) return;
-                    this.model.save({
-                        todo: string
-                    });
-                }
-                this.close();
-            }
+            if (e.keyCode !== 13) return;
+            this.close();
         },
+
         validate: function(string) {
             if(string){
                var mydiv = document.createElement("div");
@@ -82,11 +85,11 @@ define(['Backbone','Underscore',"jQuery"], function(Backbone,_, $){
                 {
                     return mydiv.innerText;
                
-                }   
+                }
                 else // Mozilla does not work with innerText
                 {
                     return mydiv.textContent;
-                }                           
+                }
           }
         },
         updateCounter: function(e) {

@@ -1,4 +1,4 @@
-define(["jQuery", 'Backbone','Underscore',], function($, Backbone, _){
+define(["jQuery", 'Backbone','Underscore'], function($, Backbone, _){
 
 ListItemView = Backbone.View.extend({
         tagName: "li",
@@ -31,6 +31,7 @@ ListItemView = Backbone.View.extend({
             this.$('.listItem').addClass('hide');
             this.$('.editListItem').addClass('editing');
             this.$('input').focus();
+            this.$('input').val(this.model.get('title'));
         },
 
         //Remove element from scene.
@@ -43,6 +44,7 @@ ListItemView = Backbone.View.extend({
         close: function () {
             $('.listItem').removeClass('hide');
             $('.editListItem').removeClass('editing');
+            this.saveEdit();
         },
 
         //Destroy this model
@@ -50,23 +52,22 @@ ListItemView = Backbone.View.extend({
             this.model.destroy();
         },
 
+        saveEdit: function () {
+            //rensar undan eventuella HTML-taggar
+            var string = this.validate(this.$('input').val());
+            this.model.save({
+                title: string
+            });
+        },
+
         //Check if the user clicked Enter and then save if
-        //a value exists in the input field. Remove the added classes 
+        //a value exists in the input field. Remove the added classes
         //to show and hide the correct fields.
         updateOnEnter: function (e) {
-            if (e.keyCode == 13) {
-                if (this.$('input').val() != '') {
-                    var string = this.validate(this.$('input').val());
-                    if(string.length > 100) return;
-                    //rensar undan eventuella HTML-taggar
-                    string = this.validate(string);
-                    this.model.save({
-                        title: string,
-                    });
-                }
-                this.close();
-            }
+            if (e.keyCode !== 13) return;
+            this.close();
         },
+
         validate: function(string) {
             if(string){
                var mydiv = document.createElement("div");
@@ -76,15 +77,15 @@ ListItemView = Backbone.View.extend({
                 {
                     return mydiv.innerText;
                
-                }   
+                }
                 else // Mozilla does not work with innerText
                 {
                     return mydiv.textContent;
-                }                           
+                }
           }
         },
-        updateCounter: function(e) {
 
+        updateCounter: function(e) {
             //if not a enter push, then change counter
             if(e.keyCode != 13){
                 var title = this.$('.editListItem input').val();

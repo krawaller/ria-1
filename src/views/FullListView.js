@@ -22,7 +22,7 @@ define(['Backbone','Underscore',"jQuery" ,"TodoView"], function(Backbone,_,$, To
             this.collection.fetch();
 
             //This handles the drag and drop functionality
-            //with help of the, by default created, cid.	
+            //with help of the, by default created, cid.
             this.$("#todos").sortable({
                 update: function (event, ui) {
                     $('div.todo', this).each(function (i) {
@@ -40,7 +40,7 @@ define(['Backbone','Underscore',"jQuery" ,"TodoView"], function(Backbone,_,$, To
             sorted = this.collection.getTodosByCid(this, list.id);
             this.$('#todosData').html(this.template({
                 total: sorted.length,
-                remaining: this.collection.getChecked().length,
+                remaining: this.collection.getChecked().length
             }));
             return this;
         },
@@ -85,7 +85,8 @@ define(['Backbone','Underscore',"jQuery" ,"TodoView"], function(Backbone,_,$, To
             this.$('#newTodo').val('');
             $('#todoCounter').html('100');
         },
-        validate: function(string) {            if(string){
+        validate: function(string) {
+            if(string){
                var mydiv = document.createElement("div");
                mydiv.innerHTML = string;
  
@@ -93,12 +94,13 @@ define(['Backbone','Underscore',"jQuery" ,"TodoView"], function(Backbone,_,$, To
                 {
                     return mydiv.innerText;
                
-                }   
+                }
                 else // Mozilla does not work with innerText
                 {
                     return mydiv.textContent;
-                }                           
-          }        },
+                }
+          }
+        },
         updateCounter: function(e) {
 
             //if not a enter push, then change counter

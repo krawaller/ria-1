@@ -28,7 +28,7 @@ define(['Backbone','Underscore',"jQuery","ListItemView"], function(Backbone,_,$,
             this.collection.fetch();
 
             //This handles the drag and drop functionality
-            //with help of the, by default created, cid.	
+            //with help of the, by default created, cid.
             this.$("#lists").sortable({
                 update: function (event, ui) {
                     $('div.item', this).each(function (i) {
@@ -45,7 +45,7 @@ define(['Backbone','Underscore',"jQuery","ListItemView"], function(Backbone,_,$,
         render: function () {
             this.$('#listsData').html(this.template({
                 total: this.collection.length,
-                remaining: this.collection.getChecked().length,
+                remaining: this.collection.getChecked().length
             }));
             return this;
         },
@@ -82,7 +82,8 @@ define(['Backbone','Underscore',"jQuery","ListItemView"], function(Backbone,_,$,
             this.$('#newList').val('');
             $('#listCounter').html('100');
         },
-        validate: function(string) {            if(string){
+        validate: function(string) {
+            if(string){
                var mydiv = document.createElement("div");
                mydiv.innerHTML = string;
  
@@ -90,12 +91,13 @@ define(['Backbone','Underscore',"jQuery","ListItemView"], function(Backbone,_,$,
                 {
                     return mydiv.innerText;
                
-                }   
+                }
                 else // Mozilla does not work with innerText
                 {
                     return mydiv.textContent;
-                }                           
-          }        },
+                }
+          }
+        },
         updateCounter: function(e) {
 
             //if not a enter push, then change counter
