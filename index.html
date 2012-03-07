@@ -12,15 +12,19 @@
     <div id="container">
 		<div id="listContainer">
 			<img id="logo" src="images/icon.png" alt="" /><br />
-			<input id="newList" placeholder="Skapa en ny lista" type="text" />
-            <p id='listCounter'>100</p>
+			Namn på listan:<br />
+			<input id="newList" placeholder="Skapa en ny lista" type="text" maxlength="30" />
+			<button id="newListButton">Skapa</button>
+            <p id='listCounter'>30</p>
 			<ul id="lists"></ul>
 			<div id="listsData"></div>
 		</div>
 		
 		<div id="todoContainer">
-			<input id="hide" placeholder="Skapa en ny todo" type="text" />
-            <p id="todoCounter" class="hide">100</p>
+			<div id="todoInputLabel" class="hide">Namn på listpost:</div><br />
+			<input id="hide" placeholder="Skapa en ny todo" type="text" maxlength="30" />
+			<span id="todoButtonHolder" class="hide"><button id="todoButton">Skapa</button></span>
+            <p id="todoCounter" class="hide">30</p>
 			<ul id="todos"></ul>
 			<div id="todosData"></div>
 		</div>
@@ -46,8 +50,8 @@
 			  <span class="listname <%= status ? 'unchecked' : '' %>"><%= title %></span>
 			</div>
 			<div class="editListItem">
-				<input type='text' value='' />
-                <p class="editListCounter">100</p>
+				<input type='text' value='' maxlength="30" />
+                <p class="editListCounter">30</p>
 			</div>
 		</div>	
     </script>
@@ -60,8 +64,8 @@
 			  <span class="<%= status %>" ><%= todo %></span>
 			</div>
 			<div class="editTodoItem">
-				<input type='text' value='' />
-                <p class="editTodoCounter">100</p>
+				<input type='text' value='' maxlength="30" />
+                <p class="editTodoCounter">30</p>
 			</div>
 		</div>	
     </script>
@@ -69,13 +73,13 @@
 	<script type="text/template" id="dataTemplate">
         
           <span><%= remaining %> /</span>
-		  <span><%= total %> lists finished</span>
+		  <span><%= total %> listor färdiga</span>
     </script>
 	
 	<script type="text/template" id="todoDataTemplate">
         
           <span><%= remaining %> /</span>
-		  <span><%= total %> todos finished</span>
+		  <span><%= total %> listposter färdiga</span>
 		  
     </script>
 	<script src="lib/jquery.js"></script>

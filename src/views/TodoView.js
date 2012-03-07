@@ -72,8 +72,17 @@ define(['Backbone','Underscore',"jQuery"], function(Backbone,_, $){
         //a value exists in the input. Remove the added classes
         //to show and hide the correct fields.
         updateOnEnter: function (e) {
-            if (e.keyCode !== 13) return;
-            this.close();
+
+            if (e.keyCode == 13) {
+                if (this.$('input').val() != '') {
+                    var string = this.validate(this.$('input').val());
+                    if(string.length > 30) return;
+                    this.model.save({
+                        todo: string
+                    });
+                }
+                this.close();
+            }
         },
 
         validate: function(string) {
@@ -97,7 +106,7 @@ define(['Backbone','Underscore',"jQuery"], function(Backbone,_, $){
             //if not a enter push, then change counter
             if(e.keyCode != 13){
                 var title = this.$('input').val();
-                var left = 100 - title.length;
+                var left = 30 - title.length;
                 $(this.$('.editTodoCounter')).html(left);
             }
         }
